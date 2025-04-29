@@ -1,0 +1,68 @@
+/* Global styling */
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  padding: 0;
+  background-color: #f2f2f2;
+  color: #333;
+}
+
+h1, h2 {
+  color: #444;
+  text-align: center;
+}
+
+input, textarea, button {
+  display: block;
+  width: 100%;
+  max-width: 400px;
+  margin: 10px auto;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+textarea {
+  resize: vertical;
+  height: 100px;
+}
+
+button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+/* Notes container */
+#notes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  margin-top: 30px;
+}
+
+/* Individual note styling */
+.note {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.note h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.note p {
+  margin: 5px 0;
+  color: #666;
+}

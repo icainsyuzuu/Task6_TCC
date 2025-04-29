@@ -1,0 +1,25 @@
+GET http://localhost:3000/notes
+
+###
+POST http://localhost:3000/add-notes
+Content-Type: application/json
+
+{
+    "category": "General",
+    "title": "Note 5",
+    "content": "This is a note"
+}
+
+###
+PUT http://localhost:3000/update-notes/2
+Content-Type: application/json
+
+{
+    "title": "Note ica",
+    "category": "apa",
+    "content": "This is a note"
+}
+
+###
+DELETE http://localhost:3000/delete-notes/3
+
