@@ -4,19 +4,27 @@ document.addEventListener("DOMContentLoaded", () => {
   fetchNotes();
 
   document.getElementById("add-note-btn").addEventListener("click", addNote);
-  document.getElementById("update-note-btn").addEventListener("click", updateNote);
-  document.getElementById("delete-note-btn").addEventListener("click", deleteNote);
+  document
+    .getElementById("update-note-btn")
+    .addEventListener("click", updateNote);
+  document
+    .getElementById("delete-note-btn")
+    .addEventListener("click", deleteNote);
 });
 
 function fetchNotes() {
+  const status = document.getElementById("notes-status");
+  status.textContent = "Loading notes...";
+
   fetch(`${BASE_URL}/`)
     .then((response) => response.json())
     .then((notes) => {
       const notesContainer = document.getElementById("notes");
       notesContainer.innerHTML = "";
 
-      if (notes.length === 0) {
+      if (!Array.isArray(notes) || notes.length === 0) {
         notesContainer.innerHTML = "<p>No notes available.</p>";
+        status.textContent = "";
         return;
       }
 
@@ -29,10 +37,27 @@ function fetchNotes() {
           <p><strong>Category:</strong> ${note.category}</p>
           <p>${note.content}</p>
         `;
+
+        // Populate update/delete form when note clicked
+        noteElement.addEventListener("click", () => {
+          document.getElementById("update-id").value = note.id;
+          document.getElementById("update-title").value = note.title;
+          document.getElementById("update-category").value = note.category;
+          document.getElementById("update-content").value = note.content;
+          document.getElementById("delete-id").value = note.id;
+        });
+
         notesContainer.appendChild(noteElement);
       });
+
+      status.textContent = "";
     })
-    .catch((error) => console.error("Error fetching notes:", error));
+    .catch((error) => {
+      console.error("Error fetching notes:", error);
+      document.getElementById("notes").innerHTML =
+        "<p>Error loading notes.</p>";
+      status.textContent = "";
+    });
 }
 
 function addNote() {
@@ -60,8 +85,8 @@ function addNote() {
     })
     .then((data) => {
       alert(data.message || "Note added successfully!");
-      fetchNotes(); // Refresh list
-      clearForm(); // Clear form after adding
+      fetchNotes();
+      clearForm();
     })
     .catch((error) => {
       console.error("Error adding note:", error);
@@ -95,8 +120,8 @@ function updateNote() {
     })
     .then((data) => {
       alert(data.message || "Note updated successfully!");
-      fetchNotes(); // Refresh list
-      clearForm(); // Clear form after update
+      fetchNotes();
+      clearForm();
     })
     .catch((error) => {
       console.error("Error updating note:", error);
@@ -120,8 +145,8 @@ function deleteNote() {
         throw new Error("Failed to delete note");
       }
       alert("Note deleted successfully!");
-      fetchNotes(); // Refresh list
-      clearForm(); // Clear form after delete
+      fetchNotes();
+      clearForm();
     })
     .catch((error) => {
       console.error("Error deleting note:", error);
