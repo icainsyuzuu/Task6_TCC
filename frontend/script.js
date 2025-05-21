@@ -5,15 +5,19 @@ document.addEventListener("DOMContentLoaded", () => {
   fetchNotes();
 
   document.getElementById("add-note-btn").addEventListener("click", addNote);
-  document.getElementById("update-note-btn").addEventListener("click", updateNote);
-  document.getElementById("delete-note-btn").addEventListener("click", deleteNote);
+  document
+    .getElementById("update-note-btn")
+    .addEventListener("click", updateNote);
+  document
+    .getElementById("delete-note-btn")
+    .addEventListener("click", deleteNote);
 });
 
 function fetchNotes() {
   const status = document.getElementById("notes-status");
   status.textContent = "Loading notes...";
 
-  fetch(`${BASE_URL}/notes`)
+  fetch(`${BASE_URL}/`)
     .then((response) => response.json())
     .then((notes) => {
       const notesContainer = document.getElementById("notes");
@@ -50,7 +54,8 @@ function fetchNotes() {
     })
     .catch((error) => {
       console.error("Error fetching notes:", error);
-      document.getElementById("notes").innerHTML = "<p>Error loading notes.</p>";
+      document.getElementById("notes").innerHTML =
+        "<p>Error loading notes.</p>";
       status.textContent = "";
     });
 }
@@ -65,13 +70,16 @@ function addNote() {
     return;
   }
 
-  fetch(`${BASE_URL}/notes`, {
+  fetch(`${BASE_URL}/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ title, category, content }),
   })
     .then((response) => {
-      if (!response.ok) return response.json().then((data) => { throw new Error(data.error || "Failed to add note"); });
+      if (!response.ok)
+        return response.json().then((data) => {
+          throw new Error(data.error || "Failed to add note");
+        });
       return response.json();
     })
     .then((data) => {
@@ -96,13 +104,16 @@ function updateNote() {
     return;
   }
 
-  fetch(`${BASE_URL}/notes/${id}`, {
+  fetch(`${BASE_URL}/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ title, category, content }),
   })
     .then((response) => {
-      if (!response.ok) return response.json().then((data) => { throw new Error(data.error || "Failed to update note"); });
+      if (!response.ok)
+        return response.json().then((data) => {
+          throw new Error(data.error || "Failed to update note");
+        });
       return response.json();
     })
     .then((data) => {
@@ -124,7 +135,7 @@ function deleteNote() {
     return;
   }
 
-  fetch(`${BASE_URL}/notes/${id}`, {
+  fetch(`${BASE_URL}/${id}`, {
     method: "DELETE",
   })
     .then((response) => {
