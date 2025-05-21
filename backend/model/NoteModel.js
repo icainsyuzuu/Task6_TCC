@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import db from "../config/database.js";
 
 const Note = db.define(
-  "catat", 
+  "catat",
   {
     title: {
       type: DataTypes.STRING,
@@ -19,9 +19,10 @@ const Note = db.define(
   },
   {
     timestamps: false,
-    tableName: "catatan", 
+    tableName: "catatan",
   }
 );
 
 db.sync().then(() => console.log("Database synced"));
+
 export default Note;

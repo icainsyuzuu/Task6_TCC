@@ -5,3 +5,11 @@ const db = new Sequelize("note", "root", "cantik", {
 });
 
 export default db;
+
+// import { Sequelize } from "sequelize";
+// const db = new Sequelize("note", "root", "", {
+//   host: "localhost",
+//   dialect: "mysql",
+// });
+
+// export default db;
