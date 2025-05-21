@@ -16,7 +16,7 @@ function fetchNotes() {
   const status = document.getElementById("notes-status");
   status.textContent = "Loading notes...";
 
-  fetch(`${BASE_URL}/`)
+  fetch(`${BASE_URL}/api/`)
     .then((response) => response.json())
     .then((notes) => {
       const notesContainer = document.getElementById("notes");
@@ -70,7 +70,7 @@ function addNote() {
     return;
   }
 
-  fetch(`${BASE_URL}/add-notes`, {
+  fetch(`${BASE_URL}/api/add-notes`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ title, category, content }),
@@ -105,7 +105,7 @@ function updateNote() {
     return;
   }
 
-  fetch(`${BASE_URL}/update-notes/${id}`, {
+  fetch(`${BASE_URL}/api/update-notes/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ title, category, content }),
@@ -137,7 +137,7 @@ function deleteNote() {
     return;
   }
 
-  fetch(`${BASE_URL}/delete-notes/${id}`, {
+  fetch(`${BASE_URL}/api/delete-notes/${id}`, {
     method: "DELETE",
   })
     .then((response) => {

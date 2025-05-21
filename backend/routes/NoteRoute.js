@@ -7,6 +7,7 @@ import {
 } from "../controller/NoteController.js";
 
 const router = express.Router();
+
 router.get("/", getNote);
 router.post("/add-notes", createNote);
 router.put("/update-notes/:id", updateNote);

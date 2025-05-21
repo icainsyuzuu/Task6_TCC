@@ -1,16 +1,25 @@
-import { Sequelize } from "sequelize";
+import { DataTypes } from "sequelize";
 import db from "../config/database.js";
 
 const Note = db.define(
-  "catat",
+  "catat", 
   {
-    title: Sequelize.STRING,
-    category: Sequelize.STRING,
-    content: Sequelize.STRING,
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    category: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    content: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   },
   {
     timestamps: false,
-    tableName: "catatan",
+    tableName: "catatan", 
   }
 );
 
