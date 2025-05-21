@@ -1,12 +1,21 @@
-import { Sequelize } from "sequelize";
+import { DataTypes } from "sequelize";
 import db from "../config/database.js";
 
 const Note = db.define(
   "catat",
   {
-    title: Sequelize.STRING,
-    category: Sequelize.STRING,
-    content: Sequelize.STRING,
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    category: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    content: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   },
   {
     timestamps: false,
@@ -15,4 +24,5 @@ const Note = db.define(
 );
 
 db.sync().then(() => console.log("Database synced"));
+
 export default Note;
