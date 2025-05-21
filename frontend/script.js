@@ -1,4 +1,5 @@
-const BASE_URL = "http://localhost:5000/api"; 
+export const BASE_URL = "https://be-1013759214686.us-central1.run.app";
+// const BASE_URL = "http://localhost:5000/api"; 
 
 document.addEventListener("DOMContentLoaded", () => {
   fetchNotes();
