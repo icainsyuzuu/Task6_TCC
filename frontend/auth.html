@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login & Register</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="auth-container">
+      <!-- LOGIN FORM -->
+      <div id="login-form-container">
+        <h2>Login</h2>
+        <form id="login-form">
+          <input
+            type="text"
+            id="login-username"
+            placeholder="Username"
+            required
+          />
+          <input
+            type="password"
+            id="login-password"
+            placeholder="Password"
+            required
+          />
+          <button type="submit">Login</button>
+        </form>
+        <div id="login-message" class="message"></div>
+        <div class="switch-link" id="show-register">
+          Belum punya akun? Daftar di sini
+        </div>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <div id="register-form-container" class="hidden">
+        <h2>Register</h2>
+        <form id="register-form">
+          <input
+            type="text"
+            id="reg-username"
+            placeholder="Username"
+            required
+          />
+          <input
+            type="password"
+            id="reg-password"
+            placeholder="Password"
+            required
+          />
+          <button type="submit">Register</button>
+        </form>
+        <div id="register-message" class="message"></div>
+        <div class="switch-link" id="show-login">
+          Sudah punya akun? Masuk di sini
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const BASE_URL = "http://localhost:5000/api/auth";
+
+      const loginFormContainer = document.getElementById(
+        "login-form-container"
+      );
+      const registerFormContainer = document.getElementById(
+        "register-form-container"
+      );
+      const showRegisterLink = document.getElementById("show-register");
+      const showLoginLink = document.getElementById("show-login");
+
+      // Fungsi switch tampilan form
+      showRegisterLink.addEventListener("click", () => {
+        loginFormContainer.classList.add("hidden");
+        registerFormContainer.classList.remove("hidden");
+        clearMessages();
+      });
+
+      showLoginLink.addEventListener("click", () => {
+        registerFormContainer.classList.add("hidden");
+        loginFormContainer.classList.remove("hidden");
+        clearMessages();
+      });
+
+      // Clear pesan error/sukses
+      function clearMessages() {
+        document.getElementById("login-message").textContent = "";
+        document.getElementById("register-message").textContent = "";
+      }
+
+      // Proses login
+      document
+        .getElementById("login-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          clearMessages();
+
+          const username = document
+            .getElementById("login-username")
+            .value.trim();
+          const password = document
+            .getElementById("login-password")
+            .value.trim();
+          const msgEl = document.getElementById("login-message");
+
+          try {
+            const res = await fetch(`${BASE_URL}/login`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ username, password }),
+            });
+            const data = await res.json();
+
+            if (!res.ok) throw new Error(data.error || "Login failed");
+
+            localStorage.setItem("token", data.token);
+            msgEl.textContent = "Login successful! Redirecting...";
+            msgEl.classList.add("success");
+
+            setTimeout(() => {
+              window.location.href = "index.html";
+            }, 1000);
+          } catch (error) {
+            msgEl.textContent = "Error: " + error.message;
+            msgEl.classList.remove("success");
+          }
+        });
+
+      // Proses register
+      document
+        .getElementById("register-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          clearMessages();
+
+          const username = document.getElementById("reg-username").value.trim();
+          const password = document.getElementById("reg-password").value.trim();
+          const msgEl = document.getElementById("register-message");
+
+          try {
+            const res = await fetch(`${BASE_URL}/register`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ username, password }),
+            });
+            const data = await res.json();
+
+            if (!res.ok) throw new Error(data.error || "Registration failed");
+
+            msgEl.textContent = "Registration successful! You can login now.";
+            msgEl.classList.add("success");
+
+            document.getElementById("register-form").reset();
+          } catch (error) {
+            msgEl.textContent = "Error: " + error.message;
+            msgEl.classList.remove("success");
+          }
+        });
+    </script>
+  </body>
+</html>

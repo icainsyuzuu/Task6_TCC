@@ -9,15 +9,28 @@
   </head>
   <body>
     <h1>Notes</h1>
+    
+    <!-- Cek token, jika tidak ada, arahkan ke halaman login -->
+    <script>
+      const token = localStorage.getItem("token");
+
+      // Jika tidak ada token, arahkan ke halaman login (auth.html)
+      if (!token) {
+        window.location.href = "auth.html";
+      }
+    </script>
+    
     <div id="notes-status"></div>
     <div id="notes"></div>
 
+    <!-- Add Note Form -->
     <h2>Add Note</h2>
     <input type="text" id="title" placeholder="Title" />
     <input type="text" id="category" placeholder="Category" />
     <textarea id="content" placeholder="Content"></textarea>
     <button id="add-note-btn">Add Note</button>
 
+    <!-- Update Note Form -->
     <h2>Update Note</h2>
     <input type="number" id="update-id" placeholder="Note ID" />
     <input type="text" id="update-title" placeholder="New Title" />
@@ -25,8 +38,169 @@
     <textarea id="update-content" placeholder="New Content"></textarea>
     <button id="update-note-btn">Update Note</button>
 
+    <!-- Delete Note Form -->
     <h2>Delete Note</h2>
     <input type="number" id="delete-id" placeholder="Note ID" />
     <button id="delete-note-btn">Delete Note</button>
+
+    <!-- Logout Button -->
+    <button id="logout-btn">Logout</button>
+
+    <script>
+      const BASE_URL = "http://localhost:5000/api"; // API base URL
+
+      // Fetch and display notes
+      function fetchNotes() {
+        const status = document.getElementById("notes-status");
+        status.textContent = "Loading notes...";
+
+        const token = localStorage.getItem("token");
+
+        fetch(`${BASE_URL}/notes`, {
+          headers: {
+            "Authorization": `Bearer ${token}`, // Include token in request headers
+          },
+        })
+          .then((response) => response.json())
+          .then((notes) => {
+            const notesContainer = document.getElementById("notes");
+            notesContainer.innerHTML = "";
+
+            if (!Array.isArray(notes) || notes.length === 0) {
+              notesContainer.innerHTML = "<p>No notes available.</p>";
+              status.textContent = "";
+              return;
+            }
+
+            notes.forEach((note) => {
+              const noteElement = document.createElement("div");
+              noteElement.classList.add("note");
+              noteElement.innerHTML = `
+                <p><strong>ID:</strong> ${note.id}</p>
+                <h3>${note.title}</h3>
+                <p><strong>Category:</strong> ${note.category}</p>
+                <p>${note.content}</p>
+              `;
+
+              noteElement.addEventListener("click", () => {
+                document.getElementById("update-id").value = note.id;
+                document.getElementById("update-title").value = note.title;
+                document.getElementById("update-category").value = note.category;
+                document.getElementById("update-content").value = note.content;
+                document.getElementById("delete-id").value = note.id;
+              });
+
+              notesContainer.appendChild(noteElement);
+            });
+
+            status.textContent = "";
+          })
+          .catch((error) => {
+            console.error("Error fetching notes:", error);
+            document.getElementById("notes").innerHTML = "<p>Error loading notes.</p>";
+            status.textContent = "";
+          });
+      }
+
+      // Add a new note
+      document.getElementById("add-note-btn").addEventListener("click", () => {
+        const title = document.getElementById("title").value.trim();
+        const category = document.getElementById("category").value.trim();
+        const content = document.getElementById("content").value.trim();
+        const token = localStorage.getItem("token");
+
+        if (!title || !category || !content) {
+          alert("Please fill all fields!");
+          return;
+        }
+
+        fetch(`${BASE_URL}/notes`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`, // Include token in request headers
+          },
+          body: JSON.stringify({ title, category, content }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            alert(data.message || "Note added successfully!");
+            fetchNotes(); // Refresh the notes list
+          })
+          .catch((error) => {
+            console.error("Error adding note:", error);
+            alert("Error: " + error.message);
+          });
+      });
+
+      // Update a note
+      document.getElementById("update-note-btn").addEventListener("click", () => {
+        const id = document.getElementById("update-id").value.trim();
+        const title = document.getElementById("update-title").value.trim();
+        const category = document.getElementById("update-category").value.trim();
+        const content = document.getElementById("update-content").value.trim();
+        const token = localStorage.getItem("token");
+
+        if (!id || !title || !category || !content) {
+          alert("Please fill all fields for update!");
+          return;
+        }
+
+        fetch(`${BASE_URL}/notes/${id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`, // Include token in request headers
+          },
+          body: JSON.stringify({ title, category, content }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            alert("Note updated successfully!");
+            fetchNotes(); // Refresh the notes list
+          })
+          .catch((error) => {
+            console.error("Error updating note:", error);
+            alert("Error: " + error.message);
+          });
+      });
+
+      // Delete a note
+      document.getElementById("delete-note-btn").addEventListener("click", () => {
+        const id = document.getElementById("delete-id").value.trim();
+        const token = localStorage.getItem("token");
+
+        if (!id) {
+          alert("Please provide the Note ID to delete.");
+          return;
+        }
+
+        fetch(`${BASE_URL}/notes/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Authorization": `Bearer ${token}`, // Include token in request headers
+          },
+        })
+          .then((response) => {
+            if (!response.ok) throw new Error("Failed to delete note");
+            alert("Note deleted successfully!");
+            fetchNotes(); // Refresh the notes list
+          })
+          .catch((error) => {
+            console.error("Error deleting note:", error);
+            alert("Error: " + error.message);
+          });
+      });
+
+      // Logout functionality
+      document.getElementById("logout-btn").addEventListener("click", () => {
+        localStorage.removeItem("token");
+        alert("You have been logged out.");
+        window.location.href = "auth.html"; // Redirect to login page
+      });
+
+      // Fetch notes on page load
+      fetchNotes();
+    </script>
   </body>
 </html>

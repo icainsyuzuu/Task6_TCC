@@ -1,5 +1,5 @@
-export const BASE_URL = "https://be-1013759214686.us-central1.run.app/api";
-// const BASE_URL = "http://localhost:5000/api"; 
+// export const BASE_URL = "https://be-1013759214686.us-central1.run.app/api";
+const BASE_URL = "http://localhost:5000/api"; 
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -14,7 +14,13 @@ function fetchNotes() {
   const status = document.getElementById("notes-status");
   status.textContent = "Loading notes...";
 
-  fetch(`${BASE_URL}/notes`)
+  const token = localStorage.getItem("token"); // Ambil token JWT
+
+  fetch(`${BASE_URL}/notes`, {
+    headers: {
+      "Authorization": `Bearer ${token}`, // Tambahkan header Authorization
+    },
+  })
     .then((response) => response.json())
     .then((notes) => {
       const notesContainer = document.getElementById("notes");
@@ -66,13 +72,21 @@ function addNote() {
     return;
   }
 
+  const token = localStorage.getItem("token");
+
   fetch(`${BASE_URL}/notes`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,  // header token sudah ada
+    },
     body: JSON.stringify({ title, category, content }),
   })
     .then((response) => {
-      if (!response.ok) return response.json().then((data) => { throw new Error(data.error || "Failed to add note"); });
+      if (!response.ok)
+        return response.json().then((data) => {
+          throw new Error(data.error || "Failed to add note");
+        });
       return response.json();
     })
     .then((data) => {
@@ -97,13 +111,21 @@ function updateNote() {
     return;
   }
 
+  const token = localStorage.getItem("token"); // Ambil token JWT
+
   fetch(`${BASE_URL}/notes/${id}`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`, // Tambahkan header Authorization
+    },
     body: JSON.stringify({ title, category, content }),
   })
     .then((response) => {
-      if (!response.ok) return response.json().then((data) => { throw new Error(data.error || "Failed to update note"); });
+      if (!response.ok)
+        return response.json().then((data) => {
+          throw new Error(data.error || "Failed to update note");
+        });
       return response.json();
     })
     .then((data) => {
@@ -125,8 +147,13 @@ function deleteNote() {
     return;
   }
 
+  const token = localStorage.getItem("token"); // Ambil token JWT
+
   fetch(`${BASE_URL}/notes/${id}`, {
     method: "DELETE",
+    headers: {
+      "Authorization": `Bearer ${token}`, // Tambahkan header Authorization
+    },
   })
     .then((response) => {
       if (!response.ok) throw new Error("Failed to delete note");
@@ -139,6 +166,8 @@ function deleteNote() {
       alert("Error: " + error.message);
     });
 }
+
+// fungsi clearForm() tetap sama
 
 function clearForm() {
   document.getElementById("title").value = "";
