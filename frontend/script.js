@@ -1,13 +1,17 @@
-export const BASE_URL = "https://be-1013759214686.us-central1.run.app/api";
-// const BASE_URL = "http://localhost:5000/api"; 
-
+export const BASE_URL =
+  "https://notes-tccnotes013-1013759214686.us-central1.run.app/api";
+// const BASE_URL = "http://localhost:5000/api";
 
 document.addEventListener("DOMContentLoaded", () => {
   fetchNotes();
 
   document.getElementById("add-note-btn").addEventListener("click", addNote);
-  document.getElementById("update-note-btn").addEventListener("click", updateNote);
-  document.getElementById("delete-note-btn").addEventListener("click", deleteNote);
+  document
+    .getElementById("update-note-btn")
+    .addEventListener("click", updateNote);
+  document
+    .getElementById("delete-note-btn")
+    .addEventListener("click", deleteNote);
 });
 
 function fetchNotes() {
@@ -18,7 +22,7 @@ function fetchNotes() {
 
   fetch(`${BASE_URL}/notes`, {
     headers: {
-      "Authorization": `Bearer ${token}`, // Tambahkan header Authorization
+      Authorization: `Bearer ${token}`, // Tambahkan header Authorization
     },
   })
     .then((response) => response.json())
@@ -57,7 +61,8 @@ function fetchNotes() {
     })
     .catch((error) => {
       console.error("Error fetching notes:", error);
-      document.getElementById("notes").innerHTML = "<p>Error loading notes.</p>";
+      document.getElementById("notes").innerHTML =
+        "<p>Error loading notes.</p>";
       status.textContent = "";
     });
 }
@@ -78,7 +83,7 @@ function addNote() {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`,  // header token sudah ada
+      Authorization: `Bearer ${token}`, // header token sudah ada
     },
     body: JSON.stringify({ title, category, content }),
   })
@@ -117,7 +122,7 @@ function updateNote() {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`, // Tambahkan header Authorization
+      Authorization: `Bearer ${token}`, // Tambahkan header Authorization
     },
     body: JSON.stringify({ title, category, content }),
   })
@@ -152,7 +157,7 @@ function deleteNote() {
   fetch(`${BASE_URL}/notes/${id}`, {
     method: "DELETE",
     headers: {
-      "Authorization": `Bearer ${token}`, // Tambahkan header Authorization
+      Authorization: `Bearer ${token}`, // Tambahkan header Authorization
     },
   })
     .then((response) => {
