@@ -17,9 +17,6 @@ app.use(express.json());
 app.use("/api", NoteRoute);
 app.use("/api/auth", AuthRoute);
 
-// Optional: handle OPTIONS explicitly if needed
-app.options("*", cors());
-
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server berjalan di port ${PORT}`);
