@@ -5,7 +5,6 @@ import AuthRoute from "./routes/AuthRoute.js";
 
 const app = express();
 
-// Konfigurasi CORS khusus
 app.use(
   cors({
     origin: "https://h-08-451505.uc.r.appspot.com",
