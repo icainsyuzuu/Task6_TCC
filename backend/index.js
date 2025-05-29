@@ -9,8 +9,6 @@ app.use(
   cors({
     origin: "https://h-08-451505.uc.r.appspot.com",
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
