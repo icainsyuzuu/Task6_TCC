@@ -17,6 +17,10 @@ app.use(express.json());
 app.use("/api", NoteRoute);
 app.use("/api/auth", AuthRoute);
 
+app.get("/", (req, res) => {
+  res.send("Helo world! Aplikasi Notes berjalan dengan baik.");
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server berjalan di port ${PORT}`);
